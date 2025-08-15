@@ -4,13 +4,18 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score, roc_curve, accuracy_score
 from sklearn.inspection import permutation_importance
+from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
 
-# ---------- FIX: Added build_features function ----------
+# ---------- FIX: Updated build_features ----------
 def build_features(df):
-    """Simple placeholder feature engineering.
-    Modify this function to add your own feature processing logic."""
-    df = df.fillna(0)  # Fill missing values
+    """Convert all non-numeric columns to numeric using label encoding."""
+    df = df.copy()
+    for col in df.columns:
+        if df[col].dtype == 'object':
+            le = LabelEncoder()
+            df[col] = le.fit_transform(df[col].astype(str))
+    df = df.fillna(0)
     return df
 
 st.set_page_config(page_title="AI Mutation Impact Predictor", layout="wide")
@@ -27,7 +32,7 @@ if uploaded_file is not None:
     X = df.iloc[:, :-1]
     y = df.iloc[:, -1]
 
-    # Build features
+    # Build features (handle strings → numbers)
     X = build_features(X)
 
     # Train simple model
@@ -56,13 +61,3 @@ if uploaded_file is not None:
     st.subheader("🔍 Feature Importance")
     importance = permutation_importance(model, X, y, random_state=42)
     feat_importance = pd.DataFrame({
-        "Feature": X.columns,
-        "Importance": importance.importances_mean
-    }).sort_values(by="Importance", ascending=False)
-    st.dataframe(feat_importance)
-
-else:
-    st.info("Please upload a CSV file to continue.")
-
-st.markdown("---")
-st.caption("Created for research demonstration purposes.")

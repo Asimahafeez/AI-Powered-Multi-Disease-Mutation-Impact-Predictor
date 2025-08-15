@@ -8,7 +8,7 @@ biochemical features (Grantham, BLOSUM62, hydrophobicity, charge, polarity, volu
 pip install -r requirements.txt
 streamlit run app.py
 ```
-
+deployed link ; https://ai-powered-multi-disease-mutation-impact-predictor-9.streamlit.app/
 ## 📁 Input format
 CSV columns (train): 
 - `ref_aa`, `alt_aa` (single letter AAs, required)  

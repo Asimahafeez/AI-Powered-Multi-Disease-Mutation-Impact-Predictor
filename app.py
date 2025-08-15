@@ -61,3 +61,13 @@ if uploaded_file is not None:
     st.subheader("🔍 Feature Importance")
     importance = permutation_importance(model, X, y, random_state=42)
     feat_importance = pd.DataFrame({
+        "Feature": X.columns,
+        "Importance": importance.importances_mean
+    }).sort_values(by="Importance", ascending=False)  # ✅ properly closed
+    st.dataframe(feat_importance)
+
+else:
+    st.info("Please upload a CSV file to continue.")
+
+st.markdown("---")
+st.caption("Created for research demonstration purposes.")
